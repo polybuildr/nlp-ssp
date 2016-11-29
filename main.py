@@ -1,14 +1,21 @@
+from nltk.corpus import brown
+
+from word2vec import Word2Vec
 from kmeans import KMeans
 from hmm import HMM
 
 def main():
-    pass
-    tagged_words = []
-    words_corpus = []
+    tagged_words = brown.tagged_words()
+    words_corpus = brown.words()
+
+    word2vec = Word2Vec()
+    word2vec.train(words_corpus)
+
+    word_vecs = [word2vec.word2vec(word) for word in words_corpus]
 
     n_clusters = 10 # random number for now
     kmeans = KMeans(n_clusters)
-    kmeans.compute(words_corpus)
+    kmeans.compute(word_vecs)
 
     # word-cluster HMM
     p_word = {}
