@@ -25,12 +25,12 @@ def main():
     p_transition_tag = None # count from tagged data
     p_initial_tag = None # count from tagged data
 
-    hmm = HMM(
-        (p_initial_cluster, p_transition_cluster, p_word_given_cluster),
-        (p_initial_tag, p_transition_tag, p_cluster_given_tag)
-    )
+    hmm_word_cluster = HMM(p_initial_cluster, p_transition_cluster, p_word_given_cluster)
+    hmm_cluster_tag = HMM(p_initial_tag, p_transition_tag, p_cluster_given_tag)
 
-    tags = hmm.viterbi([]) # words
+    words = []
+    clusters = hmm_word_cluster.viterbi(words)
+    tags = hmm_cluster_tag.viterbi(clusters)
 
 if __name__ == '__main__':
     main()
