@@ -32,7 +32,7 @@ print("Calling word2vec on every word")
 word_vecs = [word2vec.word2vec(word.lower()) for word in words_corpus]
 print("Done")
 
-n_clusters = 10 # random number for now
+n_clusters = 20 # random number for now
 kmeans = KMeans(n_clusters)
 print("Running kmeans")
 kmeans.compute(word_vecs)
