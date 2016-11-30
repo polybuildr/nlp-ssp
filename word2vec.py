@@ -14,29 +14,29 @@ class Word2Vec:
         """
         Build an internal representation of the word corpus to use for calculating vectors.
         """
-        self.corpus = map(lambda word: word.lower(), words)
+        self.corpus = list(map(lambda word: word.lower(), words))
         self.words = nltk.FreqDist(self.corpus)
-        self.words = map(lambda tup: tup[0], self.words.most_common())
+        self.words = list(map(lambda tup: tup[0], self.words.most_common()))
         self.topK = self.words[:min(len(self.words), self.vec_length)]
         self.topKdict = dict()
         for word in self.topK:
             self.topKdict[word] = 1
 
         self.wordToIdx = dict()
-        for i in xrange(len(self.words)):
+        for i in range(len(self.words)):
             self.wordToIdx[self.words[i]] = i
 
         self.cMatrix = np.zeros([len(self.words), self.vec_length], dtype='int16')
-        for i in xrange(len(self.corpus)):
+        for i in range(len(self.corpus)):
             word = self.corpus[i]
-            if not self.wordToIdx.has_key(word):
+            if word not in self.wordToIdx:
                 continue
             idx = self.wordToIdx[word]
-            for j in xrange(i - 2, i + 3):
-                if j < 0 or j >= len(self.corpus):
+            for j in range(i - 2, i + 3):
+                if j == i or j < 0 or j >= len(self.corpus):
                     continue
                 other = self.corpus[j]
-                if not self.topKdict.has_key(other):
+                if other not in self.topKdict:
                     continue
                 count = self.cMatrix[idx][self.wordToIdx[other]]
                 if count < self.cap_limit:
