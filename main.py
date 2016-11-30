@@ -16,7 +16,7 @@ def main():
         words_by_tag[tag].append(word)
     words_corpus = list(brown.words())
 
-    word_vec_length = 20000
+    word_vec_length = 2000
     word2vec = Word2Vec(word_vec_length)
     word2vec.train(words_corpus)
 
