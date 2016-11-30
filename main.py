@@ -85,7 +85,7 @@ for prev_cluster in count_transition_cluster:
 count_initial_cluster = Counter()
 for sentence in brown_sents:
     first_word = sentence[0]
-    cluster = kmeans.assign_points([word2vec.word2vec(first_word)])[0]
+    cluster = kmeans.assign_points([word2vec.word2vec(first_word.lower())])[0]
     count_initial_cluster[cluster] += 1
 
 p_initial_cluster = defaultdict_tiny_float()
@@ -97,7 +97,7 @@ def p_cluster_given_word(cluster, word):
     """
     cluster is a number 0 <= cluster <= k
     """
-    vec = word2vec.word2vec(word)
+    vec = word2vec.word2vec(word.lower())
     distances = [distance(vec, k) for k in kmeans.get_k_means()]
     return softmax(distances)[cluster]
 
@@ -108,7 +108,7 @@ def p_word_given_cluster(word, cluster):
 def p_cluster_given_tag(cluster, tag):
     tag_vec = np.zeros(word_vec_length)
     for word in words_by_tag[tag]:
-        tag_vec += word2vec.word2vec(word)
+        tag_vec += word2vec.word2vec(word.lower())
     tag_vec /= len(words_by_tag[tag])
     distances = [distance(tag_vec, k) for k in kmeans.get_k_means()]
     return softmax(distances)[cluster]
