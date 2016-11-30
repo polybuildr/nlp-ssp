@@ -5,7 +5,7 @@ from nltk.corpus import brown
 from word2vec import Word2Vec
 from kmeans import KMeans
 from hmm import HMM
-from utils import softmax
+from utils import softmax, distance
 
 import numpy as np
 
@@ -62,9 +62,6 @@ def main():
     total_initial_clusters = sum(count_initial_cluster.values())
     for cluster in count_initial_cluster:
         p_initial_cluster[cluster] = count_initial_cluster[cluster] / total_initial_clusters
-
-    def distance(v1, v2):
-        return np.linalg.norm(np.array(v1) - np.array(v2))
 
     def p_cluster_given_word(cluster, word):
         """
