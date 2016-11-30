@@ -1,16 +1,16 @@
 import numpy as np
 
 class HMM:
-    def __init__(self, p_initial, p_transition, p_emission):
+    def __init__(self, p_initial, p_transition, p_emission_f):
         self.p_initial = p_initial
         self.p_transition = p_transition
-        self.p_emission = p_emission
+        self.p_emission_f = p_emission_f
         self.STATES = list(self.p_initial.keys())
 
     def viterbi(self, input_tokens):
         U = self.p_initial
         T = self.p_transition
-        O = self.p_emission
+        O_f = self.p_emission_f
         STATES = self.STATES
         num_states = len(STATES)
         viterbi_matrix = np.zeros([num_states, len(input_tokens)])
@@ -23,7 +23,7 @@ class HMM:
         first_token = input_tokens[0]
         for r in range(0, num_states):
             state = STATES[r]
-            viterbi_matrix[r][0] = U[state] * O[state][first_token]
+            viterbi_matrix[r][0] = U[state] * O_f(first_token, state) # [state][first_token]
 
         for c in range(1, len(input_tokens)):
             for r in range(0, num_states):
@@ -38,7 +38,7 @@ class HMM:
                         max_p = p
                         most_likely_prev_state_idx = prev_state_idx
 
-                viterbi_matrix[r][c] = max_p * O[current_state][input_tokens[c]]
+                viterbi_matrix[r][c] = max_p * O_f(input_tokens[c], current_state) # [current_state][input_tokens[c]]
                 path_matrix[r][c] = most_likely_prev_state_idx
 
         # get best row from last column
