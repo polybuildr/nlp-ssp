@@ -108,6 +108,7 @@ def p_cluster_given_tag(cluster, tag):
     tag_vec = np.zeros(word_vec_length)
     for word in words_by_tag[tag]:
         tag_vec += word2vec.word2vec(word)
+    tag_vec /= len(words_by_tag[tag])
     distances = [distance(tag_vec, k) for k in kmeans.get_k_means()]
     return softmax(distances)[cluster]
 
