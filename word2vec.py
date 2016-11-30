@@ -39,7 +39,7 @@ class Word2Vec:
                 if not self.topKdict.has_key(other):
                     continue
                 count = self.cMatrix[idx][self.wordToIdx[other]]
-                if count < cap_limit:
+                if count < self.cap_limit:
                     count += 1
                 self.cMatrix[idx][self.wordToIdx[other]] = count
 
