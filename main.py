@@ -21,7 +21,7 @@ words_corpus = [word for word, tag in tagged_words]
 
 print("Generated corpus")
 
-word_vec_length = 10
+word_vec_length = 100
 word2vec = Word2Vec(word_vec_length)
 
 print("Training word2vec")
@@ -102,7 +102,7 @@ def p_cluster_given_word(cluster, word):
     return softmax(distances)[cluster]
 
 def p_word_given_cluster(word, cluster):
-    return p_cluster_given_word(cluster, word) * p_word[word] / p_cluster[cluster]
+        return p_cluster_given_word(cluster, word) * p_word[word] / p_cluster[cluster]
 
 # cluster-tag HMM
 def p_cluster_given_tag(cluster, tag):
@@ -141,7 +141,7 @@ print("Initialized")
 hmm_word_cluster = HMM(p_initial_cluster, p_transition_cluster, p_word_given_cluster)
 hmm_cluster_tag = HMM(p_initial_tag, p_transition_tag, p_cluster_given_tag)
 print("Created HMMs, running on input")
-words = ['we', 'feel', 'that', 'in', 'the', 'future', 'we', 'should', 'receive', 'some', 'portion', 'of', 'these', 'available', 'funds', '.']
+words = ['We', 'should', 'receive', 'some', 'portion', 'of', 'these', 'available', 'funds', '.']
 print(words)
 clusters = hmm_word_cluster.viterbi(words)
 print(clusters)
