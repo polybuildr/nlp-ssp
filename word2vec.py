@@ -1,4 +1,4 @@
-from nltk.corpus import brown
+from nltk.corpus import stopwords
 import nltk
 import numpy as np
 
@@ -17,6 +17,10 @@ class Word2Vec:
         self.corpus = list(map(lambda word: word.lower(), words))
         self.words = nltk.FreqDist(self.corpus)
         self.words = list(map(lambda tup: tup[0], self.words.most_common()))
+
+        stop = set(stopwords.words('english'))
+        self.words = filter(lambda word: word not in stop, self.words)
+        
         self.topK = self.words[:min(len(self.words), self.vec_length)]
         self.topKdict = dict()
         for word in self.topK:
