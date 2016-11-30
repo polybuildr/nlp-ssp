@@ -2,7 +2,7 @@ from collections import defaultdict, Counter
 
 from nltk.corpus import brown
 
-from word2vec import Word2Vec
+from ourword2vec import Word2Vec
 from kmeans import KMeans
 from hmm import HMM
 from utils import softmax, distance
@@ -10,18 +10,18 @@ from utils import softmax, distance
 import numpy as np
 
 # def main():
-n_count = 10000
+n_count = 5000
 tagged_sents = list(brown.tagged_sents()[:n_count])
 brown_sents = list(brown.sents()[:n_count])
 tagged_words = [word_tag for sentence in tagged_sents for word_tag in sentence]
 words_by_tag = defaultdict(list)
 for word, tag in tagged_words:
     words_by_tag[tag].append(word)
-words_corpus = [word for word, tag in tagged_words] #list(brown.words()[:20000])
+words_corpus = [word for word, tag in tagged_words]
 
 print("Generated corpus")
 
-word_vec_length = 2000
+word_vec_length = 10
 word2vec = Word2Vec(word_vec_length)
 
 print("Training word2vec")
@@ -29,7 +29,7 @@ word2vec.train(words_corpus)
 print("Trained word2vec")
 
 print("Calling word2vec on every word")
-word_vecs = [word2vec.word2vec(word) for word in words_corpus]
+word_vecs = [word2vec.word2vec(word.lower()) for word in words_corpus]
 print("Done")
 
 n_clusters = 10 # random number for now
@@ -38,20 +38,26 @@ print("Running kmeans")
 kmeans.compute(word_vecs)
 print("Done")
 
-clusters_corpus = [kmeans.assign_points([word2vec.word2vec(word)])[0] for word in words_corpus]
+clusters_corpus = [kmeans.assign_points([word2vec.word2vec(word.lower())])[0] for word in words_corpus]
 
 print("Initializing HMMs")
 # word-cluster HMM
 word_counter = Counter()
 cluster_counter = Counter()
 
+def tiny_float():
+    return 0.0001
+
+def defaultdict_tiny_float():
+    return defaultdict(tiny_float)
+
 for word in words_corpus:
     word_counter[word] += 1
 for cluster in clusters_corpus:
     cluster_counter[cluster] += 1
 
-p_word = {}
-p_cluster = {}
+p_word = defaultdict_tiny_float()
+p_cluster = defaultdict_tiny_float()
 
 total_word_counter = sum(word_counter.values())
 for word in word_counter:
@@ -61,11 +67,6 @@ total_cluster_counter = sum(cluster_counter.values())
 for cluster in cluster_counter:
     p_cluster[cluster] = cluster_counter[cluster] / total_cluster_counter
 
-def tiny_float():
-    return 0.000000001
-
-def defaultdict_tiny_float():
-    return defaultdict(tiny_float)
 
 count_transition_cluster = defaultdict(Counter)
 prev_cluster = None

@@ -3,16 +3,19 @@ import random
 
 import numpy as np
 from sklearn.cluster import MiniBatchKMeans
+from sklearn.cluster import KMeans as SKMeans
 
 from utils import distance
 
 class KMeans:
     def __init__(self, k):
         self.k = k # number of centres
-        self.kmeans = MiniBatchKMeans(n_clusters=k)
+        self.kmeans = MiniBatchKMeans(n_clusters=k, init='random')
+        # self.kmeans = SKMeans(n_clusters=k, init='random')
         self.centres = []
 
     def compute(self, samples):
+        # self.kmeans.fit(samples)
         n = 10000
         for batch in [samples[i:i + n] for i in range(0, len(samples), n)]:
             self.kmeans.partial_fit(batch)
@@ -38,18 +41,18 @@ class KMeans:
     #     return new_center
     #
     # Assign Closest Center.
-    def assign_points(self, samples):
-        assignments = []
-        for point in samples:
-            shortest = distance(point, self.centres[0])
-            shortest_index = 0
-            for i in range(len(self.centres)):
-                val = distance(point, self.centres[i])
-                if val < shortest:
-                    shortest = val
-                    shortest_index = i
-            assignments.append(shortest_index)
-        return assignments
+    # def assign_points(self, samples):
+    #     assignments = []
+    #     for point in samples:
+    #         shortest = distance(point, self.centres[0])
+    #         shortest_index = 0
+    #         for i in range(len(self.centres)):
+    #             val = distance(point, self.centres[i])
+    #             if val < shortest:
+    #                 shortest = val
+    #                 shortest_index = i
+    #         assignments.append(shortest_index)
+    #     return assignments
 
     # # From the Assignment Compute Centres.
     # def update_centres(self, samples, assignments):

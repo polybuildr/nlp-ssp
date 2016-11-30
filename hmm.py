@@ -14,7 +14,9 @@ class HMM:
         STATES = self.STATES
         num_states = len(STATES)
         viterbi_matrix = np.zeros([num_states, len(input_tokens)])
+        self.viterbi_matrix = viterbi_matrix
         path_matrix = np.zeros([num_states, len(input_tokens)], dtype='int')
+        self.path_matrix = path_matrix
 
         r = 0
         c = 0
